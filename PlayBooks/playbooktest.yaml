@@ -1,0 +1,6 @@
+---
+- hosts: testservers
+  become: true
+  roles:
+  - role: prodRole
+
