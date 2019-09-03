@@ -1,0 +1,5 @@
+---
+- hosts: productionservers
+  become: true
+  roles:
+  - role: prodRole

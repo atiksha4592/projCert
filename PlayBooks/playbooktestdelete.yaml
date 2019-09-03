@@ -1,0 +1,12 @@
+---
+- hosts: testservers
+  become: true
+  tasks:
+  - name: Remove Container
+    docker_container:
+      name: mysitedocker
+      state: absent
+  - name: Remove Image
+    docker_image:
+      name: mysite
+      state: absent

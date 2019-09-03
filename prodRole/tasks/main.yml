@@ -1,0 +1,43 @@
+---
+# tasks file for prodRole
+- name: apt-update
+  apt: 
+    force_apt_get: yes
+    update_cache: yes
+
+- name: install Docker
+  apt:
+    force_apt_get: yes
+    name: docker.io
+    state: present
+
+- name: Create a new directory
+  file:
+    path: /root/DockerFile
+    state: directory
+
+- name: Copy Website
+  copy:
+    src: /var/lib/jenkins/workspace/PHP_build/website
+    dest: /root/DockerFile/
+
+- name: Copy Docker file
+  copy:
+    src: /var/lib/jenkins/workspace/PHP_build/Dockerfile
+    dest: /root/DockerFile
+
+- name: Remove Container
+  docker_container:
+    name: mysitedocker
+    state: absent
+
+- name: Remove Image
+  docker_image:
+    name: mysite
+    state: absent
+
+- name: Build Docker Image
+  command: chdir=/root/DockerFile docker build . -t mysite
+
+- name: Run Docker Container
+  command: chdir=/root/DockerFile docker run -itd -p 9090:80 --name="mysitedocker" mysite
